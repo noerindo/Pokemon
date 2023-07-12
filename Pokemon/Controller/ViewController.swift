@@ -50,7 +50,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         let collectionViewLayout = collectionViewLayout as! UICollectionViewFlowLayout
         let spacing = (collectionViewLayout.minimumInteritemSpacing * CGFloat(numOfColim - 1)) + collectionViewLayout.sectionInset.left + collectionViewLayout.sectionInset.right
         let width = (collectionView.frame.size.width / numOfColim) - spacing
-    
+
         return CGSize(width: width, height: width)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -62,8 +62,11 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
        let detail = self.storyboard?.instantiateViewController(identifier: "DetailViewController") as! DetailViewController
-        detail.pokemon = apiReseult.results[indexPath.row]
+        detail.pokemonLink = apiReseult.results[indexPath.row].url
+        detail.titlePokemon = apiReseult.results[indexPath.row].name
         self.navigationController?.pushViewController(detail, animated: true)
+//        print("paassing",apiReseult.results[indexPath.row].url)
+//
     }
 }
 

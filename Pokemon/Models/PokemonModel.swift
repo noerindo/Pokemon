@@ -22,3 +22,4 @@ struct Pokemon: Codable {
 struct PokemonIndex: Codable {
     let results: [Pokemon]
 }
+
