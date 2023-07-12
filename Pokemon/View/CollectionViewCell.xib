@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="gTV-IL-0wX" customClass="CollectionViewCell" customModule="Pokemon" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dry-1R-iQP">
+                        <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Esa-Eb-r2N">
+                                <rect key="frame" x="14" y="15.999999999999998" width="122" height="20.333333333333329"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mcF-jA-tTF">
+                                <rect key="frame" x="14" y="52" width="122" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.9624561667" green="0.77292865509999997" blue="0.34105849269999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="mcF-jA-tTF" secondAttribute="trailing" constant="14" id="4MT-hV-KUZ"/>
+                            <constraint firstItem="mcF-jA-tTF" firstAttribute="leading" secondItem="Dry-1R-iQP" secondAttribute="leading" constant="14" id="XFa-1U-qDB"/>
+                            <constraint firstItem="mcF-jA-tTF" firstAttribute="top" secondItem="Esa-Eb-r2N" secondAttribute="bottom" constant="15.67" id="Xpp-Yp-bbV"/>
+                            <constraint firstAttribute="trailing" secondItem="Esa-Eb-r2N" secondAttribute="trailing" constant="14" id="aKG-S5-vZ8"/>
+                            <constraint firstItem="Esa-Eb-r2N" firstAttribute="top" secondItem="Dry-1R-iQP" secondAttribute="top" constant="16" id="hD2-lo-GWH"/>
+                            <constraint firstItem="Esa-Eb-r2N" firstAttribute="leading" secondItem="Dry-1R-iQP" secondAttribute="leading" constant="14" id="ign-Hf-cKT"/>
+                            <constraint firstAttribute="bottom" secondItem="mcF-jA-tTF" secondAttribute="bottom" constant="40" id="tv2-eR-Ot1"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="Dry-1R-iQP" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="5N4-a7-CeH"/>
+                <constraint firstItem="Dry-1R-iQP" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="DGI-kO-dhW"/>
+                <constraint firstAttribute="trailing" secondItem="Dry-1R-iQP" secondAttribute="trailing" id="RUs-Vc-Ze1"/>
+                <constraint firstAttribute="bottom" secondItem="Dry-1R-iQP" secondAttribute="bottom" id="ZbN-g1-CBW"/>
+            </constraints>
+            <connections>
+                <outlet property="namePokemon" destination="Esa-Eb-r2N" id="QpP-Xw-t4i"/>
+                <outlet property="urlPokemon" destination="mcF-jA-tTF" id="Fd9-ag-OZu"/>
+            </connections>
+            <point key="canvasLocation" x="138.93129770992365" y="19.718309859154932"/>
+        </collectionViewCell>
+    </objects>
+</document>
