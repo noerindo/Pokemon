@@ -24,7 +24,6 @@
 		E0B4B3FE2A5E545D0029837C /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B4B3FD2A5E545D0029837C /* DetailViewController.swift */; };
 		E0B4B43E2A5E84D50029837C /* PokemonDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B4B43D2A5E84D50029837C /* PokemonDetailModel.swift */; };
 		E0B4B4452A5E93C90029837C /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B4B4442A5E93C90029837C /* Extension.swift */; };
-		E0B4B4472A5EA6D70029837C /* ImageDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B4B4462A5EA6D70029837C /* ImageDownload.swift */; };
 		E0B4B44A2A5EA9FD0029837C /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = E0B4B4492A5EA9FD0029837C /* SDWebImage */; };
 		E0B4B44C2A5EA9FD0029837C /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E0B4B44B2A5EA9FD0029837C /* SDWebImageMapKit */; };
 /* End PBXBuildFile section */
@@ -67,7 +66,6 @@
 		E0B4B3FD2A5E545D0029837C /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		E0B4B43D2A5E84D50029837C /* PokemonDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonDetailModel.swift; sourceTree = "<group>"; };
 		E0B4B4442A5E93C90029837C /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
-		E0B4B4462A5EA6D70029837C /* ImageDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownload.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,7 +162,6 @@
 			isa = PBXGroup;
 			children = (
 				E037FC052A5E0F6F000170F2 /* NetworkService.swift */,
-				E0B4B4462A5EA6D70029837C /* ImageDownload.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -359,7 +356,6 @@
 				E037FC062A5E0F6F000170F2 /* NetworkService.swift in Sources */,
 				E037FBD62A5DFE32000170F2 /* ViewController.swift in Sources */,
 				E0B4B3FA2A5E32740029837C /* CollectionViewCell.swift in Sources */,
-				E0B4B4472A5EA6D70029837C /* ImageDownload.swift in Sources */,
 				E037FBD22A5DFE31000170F2 /* AppDelegate.swift in Sources */,
 				E037FBD42A5DFE32000170F2 /* SceneDelegate.swift in Sources */,
 				E037FC032A5E05BE000170F2 /* PokemonModel.swift in Sources */,

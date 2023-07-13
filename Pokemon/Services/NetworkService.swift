@@ -46,4 +46,15 @@ class NetworkService {
         }.resume()
          
     }
+    
+    func getIdFromUrl(url: String, completionHandler: @escaping (_ resultId: String?) -> (Void))   {
+        _ = ""
+        if let range = url.range(of: "/pokemon/") {
+            let removedUrlFroString = url[range.upperBound...]
+            let pureId = String(removedUrlFroString.dropLast())
+            completionHandler(pureId)
+        }
+    }
 }
+
+

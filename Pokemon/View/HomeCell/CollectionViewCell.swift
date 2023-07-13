@@ -9,7 +9,8 @@ import UIKit
 
 class CollectionViewCell: UICollectionViewCell {
 
-    @IBOutlet weak var urlPokemon: UILabel!
+
+    @IBOutlet weak var photoPokemon: UIImageView!
     @IBOutlet weak var namePokemon: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()

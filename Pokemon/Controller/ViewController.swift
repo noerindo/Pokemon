@@ -12,8 +12,11 @@ class ViewController: UIViewController {
     
     var apiReseult = PokemonIndex(results: [Pokemon]())
     @IBOutlet weak var collectionView: UICollectionView!
+    var pokemonId: String = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         NetworkService.sharedApi.fetchingAPIData {
             apiData in
             self.apiReseult = apiData
@@ -25,7 +28,8 @@ class ViewController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "cell")
-        // Do any additional setup after loading the view.
+        
+        self.navigationItem.title = "PokemonList"
     }
 
 
@@ -40,7 +44,11 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         let cellList = apiReseult.results[indexPath.row]
         cell.namePokemon.text = cellList.name
-        cell.urlPokemon.text = cellList.url
+        NetworkService.sharedApi.getIdFromUrl(url: cellList.url) { resultId in
+            self.pokemonId = resultId!
+        }
+        let imgUrl = URL(string:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/\(pokemonId).png")
+        cell.photoPokemon.sd_setImage(with: imgUrl)
         
         return cell
     }
