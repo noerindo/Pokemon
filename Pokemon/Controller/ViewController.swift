@@ -14,6 +14,12 @@ class ViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     var pokemonId: String = ""
     
+    @IBOutlet weak var searchBar: UISearchBar!
+    
+    var pokemonFilter : [Pokemon] = []
+    var pokemonSelected: Pokemon?
+    var searchActive: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -25,6 +31,8 @@ class ViewController: UIViewController {
                 self.collectionView.reloadData()
             }
         }
+        searchBar.delegate = self
+        pokemonFilter = apiReseult.results
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "cell")
@@ -37,18 +45,35 @@ class ViewController: UIViewController {
 
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return apiReseult.results.count
+        if searchActive == true {
+            return pokemonFilter.count
+        } else {
+            return apiReseult.results.count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         let cellList = apiReseult.results[indexPath.row]
-        cell.namePokemon.text = cellList.name
-        NetworkService.sharedApi.getIdFromUrl(url: cellList.url) { resultId in
-            self.pokemonId = resultId!
+        if searchActive == true {
+            let celFilter = pokemonFilter[indexPath.row]
+            cell.namePokemon.text = celFilter.name
+            NetworkService.sharedApi.getIdFromUrl(url: celFilter.url) { resultId in
+                self.pokemonId = resultId!
+            }
+            let imgUrl = URL(string:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/\(pokemonId).png")
+            cell.photoPokemon.sd_setImage(with: imgUrl)
+            
+        } else {
+            cell.namePokemon.text = cellList.name
+            NetworkService.sharedApi.getIdFromUrl(url: cellList.url) { resultId in
+                self.pokemonId = resultId!
+            }
+            let imgUrl = URL(string:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/\(pokemonId).png")
+            cell.photoPokemon.sd_setImage(with: imgUrl)
         }
-        let imgUrl = URL(string:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/\(pokemonId).png")
-        cell.photoPokemon.sd_setImage(with: imgUrl)
+        
+        
         
         return cell
     }
@@ -78,3 +103,27 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     }
 }
 
+extension ViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        pokemonFilter = []
+//        print("editTextStarted")
+        if searchText == "" {
+            searchActive = false
+            pokemonFilter = apiReseult.results.self
+            
+        } else {
+            searchActive = true
+            for poke in apiReseult.results
+            {
+                if poke.name.lowercased().contains(searchText.lowercased())
+                {
+                    pokemonFilter.append(poke)
+                    print(pokemonFilter)
+                }
+            }
+//            pokemonFilter = pokemonModel.filter({$0.name.contains(searchText)})
+            print(apiReseult.results.self.filter({$0.name.contains(searchText)}))
+        }
+        collectionView.reloadData()
+    }
+}
