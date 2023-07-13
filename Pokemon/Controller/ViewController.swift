@@ -33,14 +33,13 @@ class ViewController: UIViewController {
         }
         searchBar.delegate = self
         pokemonFilter = apiReseult.results
+        
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "cell")
         
         self.navigationItem.title = "PokemonList"
     }
-
-
 }
 
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -72,9 +71,6 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
             let imgUrl = URL(string:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/\(pokemonId).png")
             cell.photoPokemon.sd_setImage(with: imgUrl)
         }
-        
-        
-        
         return cell
     }
     
@@ -95,18 +91,20 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
        let detail = self.storyboard?.instantiateViewController(identifier: "DetailViewController") as! DetailViewController
-        detail.pokemonLink = apiReseult.results[indexPath.row].url
-        detail.titlePokemon = apiReseult.results[indexPath.row].name
+        if searchActive == true {
+            detail.pokemonLink = pokemonFilter[indexPath.row].url
+            detail.titlePokemon = pokemonFilter[indexPath.row].name
+        } else {
+            detail.pokemonLink = apiReseult.results[indexPath.row].url
+            detail.titlePokemon = apiReseult.results[indexPath.row].name
+        }
         self.navigationController?.pushViewController(detail, animated: true)
-//        print("paassing",apiReseult.results[indexPath.row].url)
-//
     }
 }
 
 extension ViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         pokemonFilter = []
-//        print("editTextStarted")
         if searchText == "" {
             searchActive = false
             pokemonFilter = apiReseult.results.self
@@ -121,8 +119,6 @@ extension ViewController: UISearchBarDelegate {
                     print(pokemonFilter)
                 }
             }
-//            pokemonFilter = pokemonModel.filter({$0.name.contains(searchText)})
-            print(apiReseult.results.self.filter({$0.name.contains(searchText)}))
         }
         collectionView.reloadData()
     }

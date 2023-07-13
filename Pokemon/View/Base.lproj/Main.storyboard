@@ -85,7 +85,7 @@
                                         </constraints>
                                     </imageView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RHQ-ip-wti">
-                                        <rect key="frame" x="50" y="341.33333333333331" width="240" height="251.66666666666669"/>
+                                        <rect key="frame" x="50" y="341.33333333333331" width="240" height="210.99999999999994"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ball" translatesAutoresizingMaskIntoConstraints="NO" id="UHL-mw-OpM">
                                                 <rect key="frame" x="90" y="8" width="60" height="60"/>
@@ -128,14 +128,14 @@
                                                     </label>
                                                 </subviews>
                                             </stackView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Labelnjdnjncjncjncjncrnvkrnv" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LW4-y4-Sd6">
-                                                <rect key="frame" x="50" y="84" width="140" height="40.666666666666657"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Height :" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LW4-y4-Sd6">
+                                                <rect key="frame" x="50" y="84" width="140" height="20.333333333333329"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Labelnjdnjncjncjncjncrnvkrnv" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jhd-ld-WSU">
-                                                <rect key="frame" x="50" y="137.00000000000006" width="145" height="40.666666666666657"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weight: " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jhd-ld-WSU">
+                                                <rect key="frame" x="50" y="116.66666666666669" width="140" height="20.333333333333343"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -144,11 +144,10 @@
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstItem="jhd-ld-WSU" firstAttribute="top" secondItem="LW4-y4-Sd6" secondAttribute="bottom" constant="12.33" id="1fp-Zu-1Cl"/>
-                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="jhd-ld-WSU" secondAttribute="trailing" constant="45" id="1zP-uS-TTb"/>
                                             <constraint firstAttribute="trailing" secondItem="UHL-mw-OpM" secondAttribute="trailing" constant="90" id="2vk-G1-7UX"/>
+                                            <constraint firstItem="jhd-ld-WSU" firstAttribute="leading" secondItem="RHQ-ip-wti" secondAttribute="leading" constant="50" id="96k-8R-Pa7"/>
                                             <constraint firstItem="1tu-Rv-L2Z" firstAttribute="top" secondItem="RHQ-ip-wti" secondAttribute="topMargin" id="9WP-VM-cti"/>
                                             <constraint firstItem="LW4-y4-Sd6" firstAttribute="top" secondItem="UHL-mw-OpM" secondAttribute="bottom" constant="16" id="DVr-Mu-LwP"/>
-                                            <constraint firstItem="jhd-ld-WSU" firstAttribute="leading" secondItem="UHL-mw-OpM" secondAttribute="leading" constant="-40" id="Fsj-wG-oEi"/>
                                             <constraint firstItem="UHL-mw-OpM" firstAttribute="leading" secondItem="1tu-Rv-L2Z" secondAttribute="trailing" constant="8" id="Xjh-zr-Bep"/>
                                             <constraint firstItem="UHL-mw-OpM" firstAttribute="leading" secondItem="RHQ-ip-wti" secondAttribute="leading" constant="90" id="c50-lF-SgV"/>
                                             <constraint firstItem="LW4-y4-Sd6" firstAttribute="centerX" secondItem="RHQ-ip-wti" secondAttribute="centerX" id="cI8-Tb-ZSh"/>
@@ -160,6 +159,7 @@
                                             <constraint firstAttribute="bottom" secondItem="jhd-ld-WSU" secondAttribute="bottom" constant="74" id="u33-FJ-l4s"/>
                                             <constraint firstItem="1tu-Rv-L2Z" firstAttribute="top" secondItem="UHL-mw-OpM" secondAttribute="top" id="up1-jw-e9h"/>
                                             <constraint firstItem="o5d-dn-FON" firstAttribute="leading" secondItem="UHL-mw-OpM" secondAttribute="trailing" constant="8" id="vmv-wF-s7E"/>
+                                            <constraint firstItem="jhd-ld-WSU" firstAttribute="centerX" secondItem="RHQ-ip-wti" secondAttribute="centerX" id="w0B-2A-QWN"/>
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Pokemon" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qgh-uj-LRU">
