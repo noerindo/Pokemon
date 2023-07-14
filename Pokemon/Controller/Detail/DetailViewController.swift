@@ -23,6 +23,13 @@ class DetailViewController: UIViewController {
             namePokemon.textColor = UIColor.white
         }
     }
+    
+    @IBOutlet weak var favoriteBtn: UIButton!
+    var isInFavorites: Bool = false
+    var result: PokemonDetail?
+    private lazy var pokemonProvider: PokemonProvider = { return PokemonProvider() }()
+//    var pokemonSave: [FavoritePokemonModel] = []
+    
     @IBOutlet weak var slotTypeText: UILabel!
     @IBOutlet weak var nameTypeText2: UILabel!
     @IBOutlet weak var nameTypeText: UILabel!
@@ -39,9 +46,21 @@ class DetailViewController: UIViewController {
     var pokemonLink: String?
     var titlePokemon: String?
     var apiDetail: PokemonDetail?
+    var pokemonId: Int = 0
+    private var pokemonName: String?
+    
+//    private lazy var managerCoreData: ManagerCoreData = { return ManagerCoreData() }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let isDataExist = isInFavorites
+        if isDataExist {
+            favoriteBtn.setImage(UIImage(systemName: "suit.heart.fill")!.withTintColor(.red, renderingMode: .alwaysOriginal), for: .normal)
+        }
+        
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        
         guard let pokemonLinkk = pokemonLink else { return }
         NetworkService.sharedApi.fetchingAPIDataDetail(url: pokemonLinkk) { [weak self] apiData in
             
@@ -54,7 +73,7 @@ class DetailViewController: UIViewController {
                 self?.nameTypeText.text = apiData.types[0].type?.name2
                 self?.slotTypeText.text = "\(apiData.types[0].slot)"
                 
-                var typeArry = apiData.types.count
+                let typeArry = apiData.types.count
                 if typeArry >= 2 {
                     self?.nameTypeText2.text = apiData.types[1].type?.name2
                     self?.slotTypeText2.text = "\(apiData.types[1].slot)"
@@ -69,11 +88,80 @@ class DetailViewController: UIViewController {
             
             }
         }
+        
         self.navigationItem.title = titlePokemon
 
        
     }
+    
 
+    @IBAction func addFavorite(_ sender: UIButton) {
+        if isInFavorites {
+            print("hapus")
+            deleteFavorite(sender)
+        } else {
+            print("save")
+            savePokemon(sender)
+        }
+    }
+    
+//            guard let photoData = try? Data(contentsOf: URL(string: .sprites?.back_default!)!)  else {
+//                return
+//            }
+    
+    private func savePokemon(_ sender: UIButton) {
+        guard let slotType = slotTypeText.text else {
+            return
+        }
+        guard let slotType2 = slotTypeText2.text else { return }
+        guard let heightPoke = heightPokemon.text else { return }
+        guard let nameTypePoke = nameTypeText.text else { return }
+        guard let nameTypePoke2 = nameTypeText2.text else { return }
+        guard let namePoke = namePokemon.text else { return }
+        guard let photoPoke = photoPokemon.image?.base64 else { return }
+        guard let weightPoke = weightPokemon.text else { return }
+        
+        
+        pokemonProvider.createPokemon(pokemonId, "\(slotType)", "\(slotType2)", "\(heightPoke)", "\(nameTypePoke)", "\(nameTypePoke2)", "\(namePoke)", "\(photoPoke)", "\(weightPoke)") {
+            DispatchQueue.main.async {
+                self.isInFavorites.toggle()
+                self.setButtonBackGround(
+                    view: sender,
+                    on: UIImage(systemName: "suit.heart.fill")!.withTintColor(.red, renderingMode: .alwaysOriginal),
+                    off: UIImage(systemName: "suit.heart")!,
+                    onOffStatus: self.isInFavorites
+                )
+                self.present(Alert.createAlertController(title: "Successful", message: "Save Pokemon"),animated: true)
+            }
+            
+        }
+    }
+    
+    private func setButtonBackGround(view: UIButton, on: UIImage, off: UIImage, onOffStatus: Bool ) {
+        switch onOffStatus {
+        case true:
+            view.setImage(on, for: .normal)
+        default:
+            view.setImage(off, for: .normal)
+        }    }
 
+    private func deleteFavorite(_ sender: UIButton) {
+        guard let pokemonNameGuard = namePokemon.text else {
+            return
+        }
+        pokemonProvider.deleteFavorite(pokemonNameGuard, completion: {
+            DispatchQueue.main.async {
+                self.isInFavorites.toggle()
+                self.setButtonBackGround(
+                    view: sender,
+                    on: UIImage(systemName: "suit.heart.fill")!.withTintColor(.red, renderingMode: .alwaysOriginal),
+                    off: UIImage(systemName: "suit.heart")!,
+                    onOffStatus: self.isInFavorites
+                )
+                self.present(Alert.createAlertController(title: "Successful", message: "Deleted Pokemon from Core Data"),animated: true)
+            }
+        })
+        
+    }
 }
 

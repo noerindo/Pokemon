@@ -10,14 +10,14 @@ import Alamofire
 
 class ViewController: UIViewController {
     
-    var apiReseult = PokemonIndex(results: [Pokemon]())
+    var apiReseult = PokemonIndex(results: [Pokemonn]())
     @IBOutlet weak var collectionView: UICollectionView!
     var pokemonId: String = ""
     
     @IBOutlet weak var searchBar: UISearchBar!
     
-    var pokemonFilter : [Pokemon] = []
-    var pokemonSelected: Pokemon?
+    var pokemonFilter : [Pokemonn] = []
+    var pokemonSelected: Pokemonn?
     var searchActive: Bool = false
     
     override func viewDidLoad() {

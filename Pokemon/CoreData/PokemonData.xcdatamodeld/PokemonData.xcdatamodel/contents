@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22F82" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="PokemonData" representedClassName="PokemonData" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="pokemonCount1" optional="YES" attributeType="String"/>
+        <attribute name="pokemonCount2" optional="YES" attributeType="String"/>
+        <attribute name="pokemonHeight" optional="YES" attributeType="String"/>
+        <attribute name="pokemonNamaType1" optional="YES" attributeType="String"/>
+        <attribute name="pokemonNamaType2" optional="YES" attributeType="String"/>
+        <attribute name="pokemonName" optional="YES" attributeType="String"/>
+        <attribute name="pokemonPhoto" optional="YES" attributeType="String"/>
+        <attribute name="pokemonWeight" optional="YES" attributeType="String"/>
+    </entity>
+</model>

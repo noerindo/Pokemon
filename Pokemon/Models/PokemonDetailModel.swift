@@ -8,7 +8,6 @@
 import Foundation
 
 struct PokemonDetail: Codable {
-    var id: Int
     var height: Int
     var weight: Int
     var name: String
