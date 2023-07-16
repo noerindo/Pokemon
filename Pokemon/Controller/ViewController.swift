@@ -20,6 +20,8 @@ class ViewController: UIViewController {
     var pokemonSelected: Pokemonn?
     var searchActive: Bool = false
     
+    private lazy var favoriteProvider: PokemonProvider = { return PokemonProvider() }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -94,10 +96,14 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         if searchActive == true {
             detail.pokemonLink = pokemonFilter[indexPath.row].url
             detail.titlePokemon = pokemonFilter[indexPath.row].name
+           
+            
         } else {
             detail.pokemonLink = apiReseult.results[indexPath.row].url
             detail.titlePokemon = apiReseult.results[indexPath.row].name
+           
         }
+       
         self.navigationController?.pushViewController(detail, animated: true)
     }
 }

@@ -9,7 +9,7 @@ import CoreData
 import UIKit
 
 class PokemonProvider {
-    
+     static let shared = PokemonProvider()
     lazy var persistentContainer: NSPersistentContainer = {
             let container = NSPersistentContainer(name: "PokemonData")
             
@@ -68,22 +68,38 @@ class PokemonProvider {
          
     }
     
-    func checkDataExistence(_ pokemonNama: String, completion: @escaping (Result<Bool, Error>) -> Void) {
-        let taskContext = newTaskContext()
-        let predicate = NSPredicate(format: "namePokemon = %@", pokemonNama)
-       
-            let fetchRequst = NSFetchRequest<NSManagedObject>(entityName: "PokemonData")
-            fetchRequst.predicate = predicate
-            do {
-                let pokemonData = try taskContext.fetch(fetchRequst)
-                let isExists = pokemonData.count > 0
-                completion(.success(isExists))
-                
-            } catch let error as NSError {
-                print("Could not fetch. \(error), \(error.userInfo)")
-                
-            }
-       
+//    func checkDataExistence(_ pokemonNama: String) -> Bool {
+//        var isExist = false
+//        let taskContext = newTaskContext()
+////        let predicate = NSPredicate(format: "pokemonName = %@", pokemonNama)
+//
+//            let fetchRequst = NSFetchRequest<NSManagedObject>(entityName: "PokemonData")
+//            fetchRequst.predicate = NSPredicate(format: "pokemonName = %@", pokemonNama)
+//            do {
+//                let pokemonData = try taskContext.fetch(fetchRequst)
+//                _ = pokemonData.count > 0
+//                isExist = true
+//
+//            } catch let error as NSError {
+//                print("Could not fetch. \(error), \(error.userInfo)")
+//
+//            }
+//        return isExist
+//    }
+    func checkDataExistence(_ pokemonName: String, completion: @escaping(Result<Bool, Error>) -> Void) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let context = appDelegate.persistentContainer.viewContext
+        
+        let request: NSFetchRequest<PokemonData>
+        request = PokemonData.fetchRequest()
+        request.predicate = NSPredicate(format: "pokemonName = %@", pokemonName)
+        do {
+            let PokemonCekData = try context.fetch(request)
+            let isDataExits = PokemonCekData.count > 0
+            completion(.success(isDataExits))
+        } catch {
+            print("cek gagal")
+        }
     }
     
     func getAllFavoritePokemon(completion: @escaping(_ pokemon: [FavoritePokemonModel]) -> Void) {

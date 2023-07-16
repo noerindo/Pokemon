@@ -25,7 +25,7 @@ class DetailViewController: UIViewController {
     }
     
     @IBOutlet weak var favoriteBtn: UIButton!
-    var isInFavorites: Bool = false
+    var isInFavorites = false
     var result: PokemonDetail?
     private lazy var pokemonProvider: PokemonProvider = { return PokemonProvider() }()
 //    var pokemonSave: [FavoritePokemonModel] = []
@@ -53,11 +53,7 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let isDataExist = isInFavorites
-        if isDataExist {
-            favoriteBtn.setImage(UIImage(systemName: "suit.heart.fill")!.withTintColor(.red, renderingMode: .alwaysOriginal), for: .normal)
-        }
+       setupFavoriteBtn()
         
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
@@ -104,11 +100,23 @@ class DetailViewController: UIViewController {
             savePokemon(sender)
         }
     }
+    func setupFavoriteBtn() {
+        guard let cekNameokemon = namePokemon.text else { return }
+        pokemonProvider.checkDataExistence(cekNameokemon) { [weak self] result in
+            guard let unwrappedSelf = self else { return }
+            switch result {
+            case .success(let isExists):
+                unwrappedSelf.isInFavorites = isExists
+                let systemName = unwrappedSelf.isInFavorites ? "suit.heart.fill" : "heart"
+                unwrappedSelf.favoriteBtn.setImage(UIImage(systemName: systemName), for: .normal)
+                unwrappedSelf.favoriteBtn.isEnabled = true
+            case .failure(let error):
+                print(error)
+            }
+        }
+            }
     
-//            guard let photoData = try? Data(contentsOf: URL(string: .sprites?.back_default!)!)  else {
-//                return
-//            }
-    
+
     private func savePokemon(_ sender: UIButton) {
         guard let slotType = slotTypeText.text else {
             return
@@ -124,6 +132,7 @@ class DetailViewController: UIViewController {
         
         pokemonProvider.createPokemon(pokemonId, "\(slotType)", "\(slotType2)", "\(heightPoke)", "\(nameTypePoke)", "\(nameTypePoke2)", "\(namePoke)", "\(photoPoke)", "\(weightPoke)") {
             DispatchQueue.main.async {
+                print("\(namePoke)")
                 self.isInFavorites.toggle()
                 self.setButtonBackGround(
                     view: sender,
