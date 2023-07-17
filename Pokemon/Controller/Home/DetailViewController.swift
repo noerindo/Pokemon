@@ -25,7 +25,7 @@ class DetailViewController: UIViewController {
     }
     
     @IBOutlet weak var favoriteBtn: UIButton!
-    var isInFavorites: Bool = false
+    var isInFavorites: Bool? = false
     var result: PokemonDetail?
     private lazy var pokemonProvider: PokemonProvider = { return PokemonProvider() }()
 //    var pokemonSave: [FavoritePokemonModel] = []
@@ -54,7 +54,7 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let isDataExist = isInFavorites
+        guard let isDataExist = isInFavorites else { return }
         if isDataExist {
             favoriteBtn.setImage(UIImage(systemName: "suit.heart.fill")!.withTintColor(.red, renderingMode: .alwaysOriginal), for: .normal)
         }
@@ -81,8 +81,8 @@ class DetailViewController: UIViewController {
                     self?.nameTypeText2.text = apiData.types[0].type?.name2
                     self?.slotTypeText2.text = "\(apiData.types[0].slot)"
                 }
-                self?.photoPokemon.sd_setImage(with: apiData.sprites!.back_default)
-                print("\(apiData.sprites!.back_default)")
+                self?.photoPokemon.sd_setImage(with: apiData.sprites!.front_default)
+                print("\(apiData.sprites!.front_default)")
                 
                 
             
@@ -96,7 +96,7 @@ class DetailViewController: UIViewController {
     
 
     @IBAction func addFavorite(_ sender: UIButton) {
-        if isInFavorites {
+        if isInFavorites! {
             print("hapus")
             deleteFavorite(sender)
         } else {
@@ -124,12 +124,12 @@ class DetailViewController: UIViewController {
         
         pokemonProvider.createPokemon(pokemonId, "\(slotType)", "\(slotType2)", "\(heightPoke)", "\(nameTypePoke)", "\(nameTypePoke2)", "\(namePoke)", "\(photoPoke)", "\(weightPoke)") {
             DispatchQueue.main.async {
-                self.isInFavorites.toggle()
+                self.isInFavorites?.toggle()
                 self.setButtonBackGround(
                     view: sender,
                     on: UIImage(systemName: "suit.heart.fill")!.withTintColor(.red, renderingMode: .alwaysOriginal),
                     off: UIImage(systemName: "suit.heart")!,
-                    onOffStatus: self.isInFavorites
+                    onOffStatus: self.isInFavorites!
                 )
                 self.present(Alert.createAlertController(title: "Successful", message: "Save Pokemon"),animated: true)
             }
@@ -151,12 +151,12 @@ class DetailViewController: UIViewController {
         }
         pokemonProvider.deleteFavorite(pokemonNameGuard, completion: {
             DispatchQueue.main.async {
-                self.isInFavorites.toggle()
+                self.isInFavorites?.toggle()
                 self.setButtonBackGround(
                     view: sender,
                     on: UIImage(systemName: "suit.heart.fill")!.withTintColor(.red, renderingMode: .alwaysOriginal),
                     off: UIImage(systemName: "suit.heart")!,
-                    onOffStatus: self.isInFavorites
+                    onOffStatus: self.isInFavorites!
                 )
                 self.present(Alert.createAlertController(title: "Successful", message: "Deleted Pokemon from Core Data"),animated: true)
             }

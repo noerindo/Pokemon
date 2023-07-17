@@ -13,6 +13,7 @@ class ViewController: UIViewController {
     var apiReseult = PokemonIndex(results: [Pokemonn]())
     @IBOutlet weak var collectionView: UICollectionView!
     var pokemonId: String = ""
+    private lazy var favoriteProvider: PokemonProvider = {  return PokemonProvider() }()
     
     @IBOutlet weak var searchBar: UISearchBar!
     
@@ -68,7 +69,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
             NetworkService.sharedApi.getIdFromUrl(url: cellList.url) { resultId in
                 self.pokemonId = resultId!
             }
-            let imgUrl = URL(string:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/\(pokemonId).png")
+            let imgUrl = URL(string:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\(pokemonId).png")
             cell.photoPokemon.sd_setImage(with: imgUrl)
         }
         return cell
@@ -91,6 +92,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
        let detail = self.storyboard?.instantiateViewController(identifier: "DetailViewController") as! DetailViewController
+        
         if searchActive == true {
             detail.pokemonLink = pokemonFilter[indexPath.row].url
             detail.titlePokemon = pokemonFilter[indexPath.row].name
@@ -98,6 +100,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
             detail.pokemonLink = apiReseult.results[indexPath.row].url
             detail.titlePokemon = apiReseult.results[indexPath.row].name
         }
+        detail.isInFavorites = favoriteProvider.checkDataExistence(detail.titlePokemon!)
         self.navigationController?.pushViewController(detail, animated: true)
     }
 }

@@ -17,7 +17,7 @@ struct PokemonDetail: Codable {
 }
 
 struct Sprites: Codable {
-    var back_default: URL
+    var front_default: URL
 //    var front_shiny: URL
 }
 

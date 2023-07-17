@@ -68,21 +68,24 @@ class PokemonProvider {
          
     }
     
-    func checkDataExistence(_ pokemonNama: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    func checkDataExistence(_ pokemonNama: String) -> Bool {
+        var isExist = false
         let taskContext = newTaskContext()
-        let predicate = NSPredicate(format: "namePokemon = %@", pokemonNama)
+        let predicate = NSPredicate(format: "pokemonName = %@", pokemonNama)
        
             let fetchRequst = NSFetchRequest<NSManagedObject>(entityName: "PokemonData")
             fetchRequst.predicate = predicate
             do {
-                let pokemonData = try taskContext.fetch(fetchRequst)
-                let isExists = pokemonData.count > 0
-                completion(.success(isExists))
+                let result = try taskContext.fetch(fetchRequst)
+                if result.count > 0 {
+                    isExist = true
+                }
                 
             } catch let error as NSError {
                 print("Could not fetch. \(error), \(error.userInfo)")
                 
             }
+        return isExist
        
     }
     
@@ -120,7 +123,7 @@ class PokemonProvider {
         taskContext.perform {
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PokemonData")
             fetchRequest.fetchLimit = 1
-            fetchRequest.predicate = NSPredicate(format: "pokemonName == \(pokemonNama)")
+            fetchRequest.predicate = NSPredicate(format: "pokemonName = %@", pokemonNama)
             let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
             batchDeleteRequest.resultType = .resultTypeCount
             if let batchDeleteResult =
