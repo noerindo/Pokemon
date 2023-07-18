@@ -124,21 +124,22 @@ class PokemonProvider {
         do {
           let results = try taskContext.fetch(fetchRequest)
           var pokemons: [FavoritePokemonModel] = []
+            print("countResult",results.count)
           for result in results {
            let pokemon = FavoritePokemonModel(
-            id: result.value(forKeyPath: "id") as? Int32,
-            pokemonCount1: result.value(forKeyPath: "pokemonCount1") as? String,
-            pokemonCount2: result.value(forKeyPath: "pokemonCount2") as? String,
-            pokemonHeight: result.value(forKeyPath: "pokemonHeight") as? String,
-            pokemonNamaType1: result.value(forKeyPath: "pokemonNamaType1") as? String,
-            pokemonNamaType2: result.value(forKeyPath: "pokemonNamaType1") as? String,
-            pokemonName: result.value(forKeyPath: "pokemonName") as? String,
-            pokemonPhoto: (result.value(forKeyPath: "pokemonPhoto") as? String)!,
-            pokemonWeight: result.value(forKeyPath: "pokemonWeight") as? String
+            pokemonCount1: result.value(forKeyPath: "pokemonCount1") as! String,
+            pokemonCount2: result.value(forKeyPath: "pokemonCount2") as! String,
+            pokemonHeight: result.value(forKeyPath: "pokemonHeight") as! String,
+            pokemonNamaType1: result.value(forKeyPath: "pokemonNamaType1") as! String,
+            pokemonNamaType2: result.value(forKeyPath: "pokemonNamaType1") as! String,
+            pokemonName: result.value(forKeyPath: "pokemonName") as! String,
+            pokemonPhoto: result.value(forKeyPath: "pokemonPhoto") as! String,
+            pokemonWeight: result.value(forKeyPath: "pokemonWeight") as! String
            )
 
             pokemons.append(pokemon)
-              print("fetchPokemon:",pokemons)
+              
+//              print("fetchPokemon:",pokemons.count)
           }
           completion(pokemons)
         } catch let error as NSError {
@@ -169,7 +170,7 @@ class PokemonProvider {
                            _ pokemonName: String,
                            _ pokemonWeight: String,
                            _ photoPokemon: String,
-                           completion: @escaping() -> Void) {
+                           completion: @escaping(NSManagedObject?) -> Void) {
     let taskContext = newTaskContext()
     taskContext.perform {
         
@@ -178,20 +179,20 @@ class PokemonProvider {
         if let results = try? taskContext.fetch(fetchRequest) {
             print("resultUpdate",results.count)
             do {
-                
+                var updatedModel: NSManagedObject?
                 for index in 0..<results.count {
                     let dataToUpdate = results[index]
                     dataToUpdate.setValue(pokemonName, forKeyPath: "pokemonName")
                     dataToUpdate.setValue(pokemonHeight, forKeyPath: "pokemonHeight")
                     dataToUpdate.setValue(pokemonWeight, forKeyPath: "pokemonWeight")
+                    updatedModel = dataToUpdate
                 }
                 
                 try taskContext.save()
-                self.getAllFavoritePokemon(completion: { pokemon in
-                    print("getPokemon",pokemon)
+                self.getAllFavoritePokemon(completion: {pokemon in
                 })
                 print("sukses")
-               
+               completion(updatedModel)
                 
             } catch {
                 print("error update pokemon")
@@ -217,9 +218,9 @@ class PokemonProvider {
                 dataToUpdate.setValue(pokemonHeight, forKeyPath: "pokemonHeight")
                 dataToUpdate.setValue(pokemonWeight, forKeyPath: "pokemonWeight")
                 
-                try context.save()
+//                try context.save()
             }
-            
+            try context.save()
             self.getAllFavoritePokemon(completion: { pokemon in
                 print("fetchDataPokemon=",pokemon)
             })

@@ -7,7 +7,14 @@
 
 import UIKit
 
+
 class FavoriteDetailViewController: UIViewController {
+    
+    var poke = FavoritePokemonModel()
+    var pokeImage: String = ""
+    var viewWillUpdate: Bool = true
+    private lazy var favoriteProvider: PokemonProvider = { return PokemonProvider() }()
+    
     
     @IBOutlet weak var photoPoke: UIImageView!
     
@@ -38,19 +45,48 @@ class FavoriteDetailViewController: UIViewController {
     @IBOutlet weak var nameTypePoke2: UILabel!
     @IBOutlet weak var nameTypePoke1: UILabel!
     @IBOutlet weak var namePoke: UILabel!
-    var poke: FavoritePokemonModel?
     
-    private lazy var favoriteProvider: PokemonProvider = { return PokemonProvider() }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        guard let pokeData = poke else { return }
-        DispatchQueue.main.async {
-            self .configure(photoPoke: pokeData.pokemonPhoto, weightPoke: pokeData.pokemonWeight!, heightPoke: pokeData.pokemonHeight!, countTypePoke2: pokeData.pokemonCount1!, countTypePoke1: pokeData.pokemonCount2!, nameTypePoke2: pokeData.pokemonNamaType2!, nameTypePoke1: pokeData.pokemonNamaType1!, namePoke: pokeData.pokemonName!)
-        }
-        // Do any additional setup after loading the view.
+       
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(viewWillUpdate)
+        loadPokemon()
+        
+//        guard let pokeData = poke else { return }
+//        DispatchQueue.main.async {
+//            self .configure(photoPoke: pokeData.pokemonPhoto, weightPoke: pokeData.pokemonWeight, heightPoke: pokeData.pokemonHeight!, countTypePoke2: pokeData.pokemonCount1!, countTypePoke1: pokeData.pokemonCount2!, nameTypePoke2: pokeData.pokemonNamaType2!, nameTypePoke1: pokeData.pokemonNamaType1!, namePoke: pokeData.pokemonName!)
+//        }
+//        print("arrPoke",arrPoke.first)
+    }
+    
+    private func loadPokemon() {
+        self.favoriteProvider.getAllFavoritePokemon { pokemon in
+            print("pokemonDetail==",pokemon)
+            print(self.pokeImage)
+//            var arrPhotoPokemon = pokemon.map({$0.pokemonPhoto})
+            DispatchQueue.main.async {
+//                for subPokemon in pokemon {
+//                    if subPokemon.pokemonPhoto == self.pokeImage {
+//                        self.poke = subPokemon
+//                        print("pokeDetailNew",self.poke)
+//                    }
+//                }
+                
+                self.configure(photoPoke: self.pokeImage, weightPoke: self.poke.pokemonWeight, heightPoke: self.poke.pokemonHeight, countTypePoke2: self.poke.pokemonCount2, countTypePoke1: self.poke.pokemonCount1, nameTypePoke2: self.poke.pokemonNamaType2, nameTypePoke1: self.poke.pokemonNamaType2, namePoke: self.poke.pokemonName)
+            }
+            
+            
+//            self.configure(photoPoke: self.pokeImage, weightPoke: self.poke.pokemonWeight, heightPoke: self.poke.pokemonHeight, countTypePoke2: self.poke.pokemonCount2, countTypePoke1: self.poke.pokemonCount1, nameTypePoke2: self.poke.pokemonNamaType2, nameTypePoke1: self.poke.pokemonNamaType2, namePoke: self.poke.pokemonName)
+//            DispatchQueue.main.async {
+//                self.poke = pokemon
+//                print("favoritesCount",self.favorites.count)
+//            }
+        }
+    }
   
     private func configure(
         photoPoke: String,
@@ -63,6 +99,7 @@ class FavoriteDetailViewController: UIViewController {
         namePoke: String
         
     ) {
+        print("configure: \(namePoke)")
         self.countTypePoke1.text = countTypePoke1
         self.countTypePoke2.text = countTypePoke2
         self.heightPoke.text = heightPoke
@@ -76,8 +113,8 @@ class FavoriteDetailViewController: UIViewController {
     }
 
     @IBAction func removeFavPokeMon(_ sender: UIButton) {
-        guard let namePokemon = poke?.pokemonName else { return }
-        let favoriteName = String(namePokemon)
+//        guard var namePokemon = poke.pokemonName else { return }
+        let favoriteName =  poke.pokemonName
         favoriteProvider.deleteFavorite(favoriteName) {
             DispatchQueue.main.async {
                 self.favPokeBtn.setImage(UIImage(systemName: "suit.heart"), for: .normal)
@@ -93,21 +130,23 @@ class FavoriteDetailViewController: UIViewController {
     }
     
     @IBAction func editPokemonBtn(_ sender: UIButton) {
-        guard let namePokemon = poke?.pokemonName else { return }
-        guard let heightPokemon = poke?.pokemonHeight else { return }
-        guard let weightPokemon = poke?.pokemonWeight else { return }
-        guard let photoPokemon = poke?.pokemonPhoto else { return }
-        guard let idPokemon = poke?.id else { return }
+//        guard let namePokemon = poke.pokemonName else { return }
+//        guard let heightPokemon = poke?.pokemonHeight else { return }
+//        guard let weightPokemon = poke?.pokemonWeight else { return }
+//        guard let photoPokemon = poke?.pokemonPhoto else { return }
+//        guard let idPokemon = poke?.id else { return }
         
         let alert = UIAlertController(title: "Warning", message: "Do you want to change this Pokemon?", preferredStyle: .alert)
 
         alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
             let editVc = self.storyboard?.instantiateViewController(identifier: "UpdatePokemonViewController") as! UpdatePokemonViewController
-            editVc.id = idPokemon
-            editVc.pokemonHeigtEdit = heightPokemon
-            editVc.pokemonNameEdit = namePokemon
-            editVc.pokemonWeigtEdit = weightPokemon
-            editVc.pokemonPhotoedit = photoPokemon
+//            editVc.id = idPokemon
+            editVc.delegate = self
+            editVc.pokemonHeigtEdit = self.poke.pokemonHeight
+            editVc.pokemonNameEdit = self.poke.pokemonName
+            editVc.pokemonWeigtEdit = self.poke.pokemonWeight
+            editVc.pokemonPhotoedit = self.poke.pokemonPhoto
+            editVc.poke = self.poke
             self.navigationController?.pushViewController(editVc, animated: true)
         })
 
@@ -116,4 +155,12 @@ class FavoriteDetailViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
+}
+
+extension FavoriteDetailViewController: UpdatePokemonViewControllerDelegate {
+    
+    func setDetailModel(newModel: FavoritePokemonModel) {
+        print("Set detail model")
+        self.poke = newModel
+    }
 }

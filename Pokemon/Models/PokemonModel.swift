@@ -24,15 +24,14 @@ struct PokemonIndex: Codable {
 }
 
 struct FavoritePokemonModel{
-    var id: Int32?
-    var pokemonCount1: String?
-    var pokemonCount2: String?
-    var pokemonHeight: String?
-    var pokemonNamaType1: String?
-    var pokemonNamaType2: String?
-    var pokemonName: String?
-    var pokemonPhoto: String
-    var pokemonWeight: String?
+    var pokemonCount1: String = ""
+    var pokemonCount2: String = ""
+    var pokemonHeight: String = ""
+    var pokemonNamaType1: String = ""
+    var pokemonNamaType2: String = ""
+    var pokemonName: String = ""
+    var pokemonPhoto: String = ""
+    var pokemonWeight: String = ""
     
 }
 

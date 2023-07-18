@@ -7,8 +7,15 @@
 
 import UIKit
 
+protocol UpdatePokemonViewControllerDelegate: AnyObject {
+    
+    func setDetailModel(newModel: FavoritePokemonModel)
+}
+
 class UpdatePokemonViewController: UIViewController {
 
+    weak var delegate: UpdatePokemonViewControllerDelegate?
+    
     @IBOutlet weak var editWeightPokemon: UITextField!
     @IBOutlet weak var editHeighPokemon: UITextField!
     @IBOutlet weak var editNamePokemon: UITextField!
@@ -24,6 +31,7 @@ class UpdatePokemonViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         editNamePokemon.text = pokemonNameEdit
         editHeighPokemon.text = pokemonHeigtEdit
         editWeightPokemon.text = pokemonWeigtEdit
@@ -59,11 +67,17 @@ class UpdatePokemonViewController: UIViewController {
 //        }
         print("UpdateSave=",pokemonNameEdit,pokemonHeigtEdit,pokemonWeigtEdit)
         
-        favoriteProvider.updatePokemon(editHeighPokemon.text ?? pokemonHeigtEdit, editNamePokemon.text ?? pokemonNameEdit, editWeightPokemon.text ?? pokemonWeigtEdit, pokemonPhotoedit, completion: {
-        })
+        favoriteProvider.updatePokemon(editHeighPokemon.text ?? pokemonHeigtEdit, editNamePokemon.text ?? pokemonNameEdit, editWeightPokemon.text ?? pokemonWeigtEdit, pokemonPhotoedit) { updatedModel in
+            
+            var newModel = self.poke
+            newModel!.pokemonName = updatedModel?.value(forKey: "pokemonName") as! String
+            print(newModel)
+            self.delegate?.setDetailModel(newModel: newModel!)
+        }
         
         favoriteProvider.getAllFavoritePokemon(completion: {pokemon in
             DispatchQueue.main.async { [weak self] in
+                print("pokemonUpdate",pokemon)
                 self?.navigationController?.popViewController(animated: true)
             }
         })

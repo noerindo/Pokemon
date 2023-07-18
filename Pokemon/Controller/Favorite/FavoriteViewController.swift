@@ -21,23 +21,31 @@ class FavoriteViewController: UIViewController {
 //    }
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadPokemon()
-        favoriteProvider.getAllFavoritePokemon { pokemon in
-            DispatchQueue.main.async {
-                self.favorites = pokemon
-                self.collectionViewPokemon.reloadData()
-            }
-        }
+//        loadPokemon()
+//        favoriteProvider.getAllFavoritePokemon { pokemon in
+//            DispatchQueue.main.async {
+//                self.favorites = pokemon
+//                self.collectionViewPokemon.reloadData()
+//            }
+//        }
         collectionViewPokemon.dataSource = self
         collectionViewPokemon.delegate = self
         collectionViewPokemon.register(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "cell")
         self.navigationItem.title = "Favorite Pokemon"
         // Do any additional setup after loading the view.
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadPokemon()
+    }
     private func loadPokemon() {
+        print("loadPokemon")
         self.favoriteProvider.getAllFavoritePokemon { pokemon in
+            print("pokemon==",pokemon)
             DispatchQueue.main.async {
                 self.favorites = pokemon
+                print("favoritesCount",self.favorites.count)
                 self.collectionViewPokemon.reloadData()
             }
         }
@@ -59,7 +67,7 @@ extension FavoriteViewController: UICollectionViewDataSource, UICollectionViewDe
         let images = imagePokemonString.imageFromBase64
         
         cell.photoPokemon.image = images
-        loadPokemon()
+//        loadPokemon()
         return cell
         
     }
@@ -82,6 +90,7 @@ extension FavoriteViewController: UICollectionViewDataSource, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detailFav = self.storyboard?.instantiateViewController(identifier: "FavoriteDetailViewController") as! FavoriteDetailViewController
         detailFav.poke = favorites[indexPath.row]
+        detailFav.pokeImage = favorites[indexPath.row].pokemonPhoto
         self.navigationController?.pushViewController(detailFav, animated: true)
     }
     
