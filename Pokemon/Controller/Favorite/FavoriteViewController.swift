@@ -21,6 +21,7 @@ class FavoriteViewController: UIViewController {
 //    }
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadPokemon()
         favoriteProvider.getAllFavoritePokemon { pokemon in
             DispatchQueue.main.async {
                 self.favorites = pokemon
@@ -33,9 +34,14 @@ class FavoriteViewController: UIViewController {
         self.navigationItem.title = "Favorite Pokemon"
         // Do any additional setup after loading the view.
     }
-//    private func loadFavorites() {
-//        activityIndicator.startAnimating()
-//    }
+    private func loadPokemon() {
+        self.favoriteProvider.getAllFavoritePokemon { pokemon in
+            DispatchQueue.main.async {
+                self.favorites = pokemon
+                self.collectionViewPokemon.reloadData()
+            }
+        }
+    }
 
 }
 
@@ -53,6 +59,7 @@ extension FavoriteViewController: UICollectionViewDataSource, UICollectionViewDe
         let images = imagePokemonString.imageFromBase64
         
         cell.photoPokemon.image = images
+        loadPokemon()
         return cell
         
     }

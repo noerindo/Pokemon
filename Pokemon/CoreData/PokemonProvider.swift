@@ -10,6 +10,8 @@ import UIKit
 
 class PokemonProvider {
     
+//    let shared = PokemonProvider()
+    
     lazy var persistentContainer: NSPersistentContainer = {
             let container = NSPersistentContainer(name: "PokemonData")
             
@@ -74,6 +76,7 @@ class PokemonProvider {
         let predicate = NSPredicate(format: "pokemonName = %@", pokemonNama)
        
             let fetchRequst = NSFetchRequest<NSManagedObject>(entityName: "PokemonData")
+        
             fetchRequst.predicate = predicate
             do {
                 let result = try taskContext.fetch(fetchRequst)
@@ -88,6 +91,31 @@ class PokemonProvider {
         return isExist
        
     }
+    
+//    func getPokemon(_ photoPokemon: String,  completion: @escaping(_ pokemons: FavoritePokemonModel) -> Void) {
+//       let taskContext = newTaskContext()
+//        taskContext.perform {
+//            let fetchRequest = NSFetchRequest<NSManagedObject>(entityName:"PokemonData")
+//            do {
+//                let result = try taskContext.fetch(fetchRequest)
+//                let pokemon = FavoritePokemonModel(
+//                    id: result.value(forKeyPath: "id") as? Int32,
+//                    pokemonCount1: result.value(forKeyPath: "pokemonCount1") as? String,
+//                    pokemonCount2: result.value(forKeyPath: "pokemonCount2") as? String,
+//                    pokemonHeight: result.value(forKeyPath: "pokemonHeight") as? String,
+//                    pokemonNamaType1: result.value(forKeyPath: "pokemonNamaType1") as? String,
+//                    pokemonNamaType2: result.value(forKeyPath: "pokemonNamaType1") as? String,
+//                    pokemonName: result.value(forKeyPath: "pokemonName") as? String,
+//                    pokemonPhoto: (result.value(forKeyPath: "pokemonPhoto") as? String)!,
+//                    pokemonWeight: result.value(forKeyPath: "pokemonWeight") as? String
+//
+//                )
+//                completion(pokemon)
+//
+//
+//            }
+//        }
+//    }
     
     func getAllFavoritePokemon(completion: @escaping(_ pokemon: [FavoritePokemonModel]) -> Void) {
       let taskContext = newTaskContext()
@@ -110,6 +138,7 @@ class PokemonProvider {
            )
 
             pokemons.append(pokemon)
+              print("fetchPokemon:",pokemons)
           }
           completion(pokemons)
         } catch let error as NSError {
@@ -135,21 +164,69 @@ class PokemonProvider {
         }
     }
     
-//    func checkDataExistence(_ id: Int) -> Bool {
-//        var isExist = false
-//        let taskContext = newTaskContext()
-//        let fetchRequest = NSFetchRequest<NSFetchRequestResult>.init(entityName: "Favorite")
-//        fetchRequest.predicate = NSPredicate(format: "id == \(id)")
-//        do {
-//            let result = try taskContext.fetch(fetchRequest)
-//            if result.count > 0 {
-//                isExist = true
-//            }
-//        } catch let error as NSError {
-//            print("Could not fetch. \(error), \(error.userInfo)")
-//        }
-//        return isExist
-//    }
-
+    func updatePokemon(
+                           _ pokemonHeight: String,
+                           _ pokemonName: String,
+                           _ pokemonWeight: String,
+                           _ photoPokemon: String,
+                           completion: @escaping() -> Void) {
+    let taskContext = newTaskContext()
+    taskContext.perform {
+        
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "PokemonData")
+        fetchRequest.predicate = NSPredicate(format: "pokemonPhoto = %@", photoPokemon)
+        if let results = try? taskContext.fetch(fetchRequest) {
+            print("resultUpdate",results.count)
+            do {
+                
+                for index in 0..<results.count {
+                    let dataToUpdate = results[index]
+                    dataToUpdate.setValue(pokemonName, forKeyPath: "pokemonName")
+                    dataToUpdate.setValue(pokemonHeight, forKeyPath: "pokemonHeight")
+                    dataToUpdate.setValue(pokemonWeight, forKeyPath: "pokemonWeight")
+                }
+                
+                try taskContext.save()
+                self.getAllFavoritePokemon(completion: { pokemon in
+                    print("getPokemon",pokemon)
+                })
+                print("sukses")
+               
+                
+            } catch {
+                print("error update pokemon")
+            }
+        }
+    }
+}
+    
+    func updatePokemonNew(_ pokemonName: String, _ pokemonHeight: String, _ pokemonWeight: String) {
+        
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        
+        guard let context = appDelegate?.persistentContainer.viewContext else { return }
+        
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest.init(entityName: "PokemonData")
+        
+        do {
+            let results = try context.fetch(fetchRequest)
+            
+            for index in 0..<results.count {
+                let dataToUpdate = results[index] as! NSManagedObject
+                dataToUpdate.setValue(pokemonName, forKey: "pokemonName")
+                dataToUpdate.setValue(pokemonHeight, forKeyPath: "pokemonHeight")
+                dataToUpdate.setValue(pokemonWeight, forKeyPath: "pokemonWeight")
+                
+                try context.save()
+            }
+            
+            self.getAllFavoritePokemon(completion: { pokemon in
+                print("fetchDataPokemon=",pokemon)
+            })
+            
+        } catch let error{
+            print("Unable to update pokemon ", error)
+        }
+    }
     
 }

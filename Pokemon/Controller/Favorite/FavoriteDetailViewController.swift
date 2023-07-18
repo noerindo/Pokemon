@@ -11,6 +11,7 @@ class FavoriteDetailViewController: UIViewController {
     
     @IBOutlet weak var photoPoke: UIImageView!
     
+    @IBOutlet weak var editBtn: UIButton!
     @IBOutlet weak var ViewCard2Bg: UIView! {
         didSet {
             ViewCard2Bg.layer.cornerRadius = 30
@@ -49,6 +50,8 @@ class FavoriteDetailViewController: UIViewController {
         }
         // Do any additional setup after loading the view.
     }
+    
+  
     private func configure(
         photoPoke: String,
         weightPoke: String,
@@ -78,8 +81,39 @@ class FavoriteDetailViewController: UIViewController {
         favoriteProvider.deleteFavorite(favoriteName) {
             DispatchQueue.main.async {
                 self.favPokeBtn.setImage(UIImage(systemName: "suit.heart"), for: .normal)
+                
                 self.present(Alert.createAlertController(title: "Remove Succeeded", message: "Pokemon has been removed from favorites"), animated: true)
+                self.favoriteProvider.getAllFavoritePokemon(completion: {pokemon in
+                    DispatchQueue.main.async { [weak self] in
+                        self?.navigationController?.popViewController(animated: true)
+                    }
+                })
             }
         }
     }
+    
+    @IBAction func editPokemonBtn(_ sender: UIButton) {
+        guard let namePokemon = poke?.pokemonName else { return }
+        guard let heightPokemon = poke?.pokemonHeight else { return }
+        guard let weightPokemon = poke?.pokemonWeight else { return }
+        guard let photoPokemon = poke?.pokemonPhoto else { return }
+        guard let idPokemon = poke?.id else { return }
+        
+        let alert = UIAlertController(title: "Warning", message: "Do you want to change this Pokemon?", preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
+            let editVc = self.storyboard?.instantiateViewController(identifier: "UpdatePokemonViewController") as! UpdatePokemonViewController
+            editVc.id = idPokemon
+            editVc.pokemonHeigtEdit = heightPokemon
+            editVc.pokemonNameEdit = namePokemon
+            editVc.pokemonWeigtEdit = weightPokemon
+            editVc.pokemonPhotoedit = photoPokemon
+            self.navigationController?.pushViewController(editVc, animated: true)
+        })
+
+        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
+    }
+    
 }

@@ -60,7 +60,11 @@ class DetailViewController: UIViewController {
         }
         
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-        
+        self.navigationItem.title = titlePokemon
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         guard let pokemonLinkk = pokemonLink else { return }
         NetworkService.sharedApi.fetchingAPIDataDetail(url: pokemonLinkk) { [weak self] apiData in
             
@@ -88,10 +92,6 @@ class DetailViewController: UIViewController {
             
             }
         }
-        
-        self.navigationItem.title = titlePokemon
-
-       
     }
     
 

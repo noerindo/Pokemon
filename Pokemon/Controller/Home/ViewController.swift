@@ -24,14 +24,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NetworkService.sharedApi.fetchingAPIData {
-            apiData in
-            self.apiReseult = apiData
-            
-            DispatchQueue.main.async {
-                self.collectionView.reloadData()
-            }
-        }
+       
         searchBar.delegate = self
         pokemonFilter = apiReseult.results
         
@@ -41,7 +34,20 @@ class ViewController: UIViewController {
         
         self.navigationItem.title = "PokemonList"
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        NetworkService.sharedApi.fetchingAPIData {
+            apiData in
+            self.apiReseult = apiData
+            
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
+    }
 }
+
+
 
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -92,7 +98,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
        let detail = self.storyboard?.instantiateViewController(identifier: "DetailViewController") as! DetailViewController
-        
+        print("didSelectCalled")
         if searchActive == true {
             detail.pokemonLink = pokemonFilter[indexPath.row].url
             detail.titlePokemon = pokemonFilter[indexPath.row].name

@@ -10,7 +10,7 @@ import Alamofire
 
 class NetworkService {
     static let sharedApi = NetworkService()
-    private let url = "https://pokeapi.co/api/v2/pokemon"
+    private let url = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=1280"
     func fetchingAPIData( handler: @escaping(_ apiData:PokemonIndex) -> (Void)) {
         AF.request(url, method: .get, parameters:  nil, encoding: URLEncoding.default, headers: nil, interceptor: nil).response { responce in
             switch responce.result {
