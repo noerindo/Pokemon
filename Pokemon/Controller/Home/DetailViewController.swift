@@ -11,7 +11,7 @@ import SDWebImage
 
 class DetailViewController: UIViewController {
     
-    private var pokemonViewModel: PokemonViewModel?
+    private var pokemonViewModel = PokemonViewModel()
 
     @IBOutlet weak var viewbgdetail: UIView! {
         didSet {
@@ -55,7 +55,9 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        pokemonViewModel?.detailViewController = self
+        guard let pokemonLinkk = pokemonLink else { return }
+        pokemonViewModel.detailViewController = self
+        pokemonViewModel.getDetail(url: pokemonLinkk)
         
         guard let isDataExist = isInFavorites else { return }
         if isDataExist {
@@ -68,8 +70,8 @@ class DetailViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        guard let pokemonLinkk = pokemonLink else { return }
-        pokemonViewModel?.getDetail(url: pokemonLinkk)
+//        guard let pokemonLinkk = pokemonLink else { return }
+//        pokemonViewModel?.getDetail(url: pokemonLinkk)
 //        NetworkService.sharedApi.fetchingAPIDataDetail(url: pokemonLinkk) { [weak self] apiData in
 //            
 //            self?.apiDetail = apiData

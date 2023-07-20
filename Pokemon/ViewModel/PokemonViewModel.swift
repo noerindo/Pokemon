@@ -12,7 +12,6 @@ import SDWebImage
 class PokemonViewModel {
     
     var detailViewController: DetailViewController?
-    
       var apiReseult = PokemonIndex(results: [Pokemonn]())
     var pokemonId: String = ""
     private lazy var favoriteProvider: PokemonProvider = {  return PokemonProvider() }()
@@ -73,7 +72,7 @@ class PokemonViewModel {
             DispatchQueue.main.async { [self] in
                 guard let unwrappedvc = detailViewController else { return }
                 
-                unwrappedvc.namePokemon.text = apiData.name
+                unwrappedvc.namePokemon.text = apiDetail?.name
                 unwrappedvc.heightPokemon.text = "Height : \(apiData.height)"
                 unwrappedvc.weightPokemon.text = "Weight : \(apiData.weight)"
                 unwrappedvc.nameTypeText.text = apiData.types[0].type?.name2
