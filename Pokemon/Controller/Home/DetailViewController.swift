@@ -10,6 +10,8 @@ import Alamofire
 import SDWebImage
 
 class DetailViewController: UIViewController {
+    
+    private var pokemonViewModel: PokemonViewModel?
 
     @IBOutlet weak var viewbgdetail: UIView! {
         didSet {
@@ -53,6 +55,7 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        pokemonViewModel?.detailViewController = self
         
         guard let isDataExist = isInFavorites else { return }
         if isDataExist {
@@ -66,32 +69,33 @@ class DetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         guard let pokemonLinkk = pokemonLink else { return }
-        NetworkService.sharedApi.fetchingAPIDataDetail(url: pokemonLinkk) { [weak self] apiData in
-            
-            self?.apiDetail = apiData
-            
-            DispatchQueue.main.async {
-                self?.namePokemon.text = apiData.name
-                self?.heightPokemon.text = "Height : \(apiData.height)"
-                self?.weightPokemon.text = "Weight : \(apiData.weight)"
-                self?.nameTypeText.text = apiData.types[0].type?.name2
-                self?.slotTypeText.text = "\(apiData.types[0].slot)"
-                
-                let typeArry = apiData.types.count
-                if typeArry >= 2 {
-                    self?.nameTypeText2.text = apiData.types[1].type?.name2
-                    self?.slotTypeText2.text = "\(apiData.types[1].slot)"
-                } else {
-                    self?.nameTypeText2.text = apiData.types[0].type?.name2
-                    self?.slotTypeText2.text = "\(apiData.types[0].slot)"
-                }
-                self?.photoPokemon.sd_setImage(with: apiData.sprites!.front_default)
-                print("\(apiData.sprites!.front_default)")
-                
-                
-            
-            }
-        }
+        pokemonViewModel?.getDetail(url: pokemonLinkk)
+//        NetworkService.sharedApi.fetchingAPIDataDetail(url: pokemonLinkk) { [weak self] apiData in
+//            
+//            self?.apiDetail = apiData
+//            
+//            DispatchQueue.main.async {
+//                self?.namePokemon.text = apiData.name
+//                self?.heightPokemon.text = "Height : \(apiData.height)"
+//                self?.weightPokemon.text = "Weight : \(apiData.weight)"
+//                self?.nameTypeText.text = apiData.types[0].type?.name2
+//                self?.slotTypeText.text = "\(apiData.types[0].slot)"
+//                
+//                let typeArry = apiData.types.count
+//                if typeArry >= 2 {
+//                    self?.nameTypeText2.text = apiData.types[1].type?.name2
+//                    self?.slotTypeText2.text = "\(apiData.types[1].slot)"
+//                } else {
+//                    self?.nameTypeText2.text = apiData.types[0].type?.name2
+//                    self?.slotTypeText2.text = "\(apiData.types[0].slot)"
+//                }
+//                self?.photoPokemon.sd_setImage(with: apiData.sprites!.front_default)
+//                print("\(apiData.sprites!.front_default)")
+//                
+//                
+//            
+//            }
+//        }
     }
     
 

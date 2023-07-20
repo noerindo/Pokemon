@@ -160,7 +160,7 @@ class PokemonProvider {
                 try? taskContext.execute(batchDeleteRequest) as? NSBatchDeleteResult,
                 batchDeleteResult.result != nil {
                 completion()
-                print("hapus berhasil")
+                print("hapus berhasil: \(pokemonNama)")
             }
         }
     }
@@ -180,8 +180,10 @@ class PokemonProvider {
             print("resultUpdate",results.count)
             do {
                 var updatedModel: NSManagedObject?
+                print("jumlah yang ketemu di core data: \(results.count)")
                 for index in 0..<results.count {
                     let dataToUpdate = results[index]
+                    print("mengubah: \(dataToUpdate.value(forKey: "pokemonName"))")
                     dataToUpdate.setValue(pokemonName, forKeyPath: "pokemonName")
                     dataToUpdate.setValue(pokemonHeight, forKeyPath: "pokemonHeight")
                     dataToUpdate.setValue(pokemonWeight, forKeyPath: "pokemonWeight")

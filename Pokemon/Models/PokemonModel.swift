@@ -20,7 +20,7 @@ struct Pokemonn: Codable {
 }
 
 struct PokemonIndex: Codable {
-    let results: [Pokemonn]
+    var results: [Pokemonn]
 }
 
 struct FavoritePokemonModel{

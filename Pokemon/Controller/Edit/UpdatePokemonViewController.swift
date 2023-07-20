@@ -14,8 +14,9 @@ protocol UpdatePokemonViewControllerDelegate: AnyObject {
 
 class UpdatePokemonViewController: UIViewController {
 
-    weak var delegate: UpdatePokemonViewControllerDelegate?
-    
+    var delegate: UpdatePokemonViewControllerDelegate?
+    var pokeUpdate = FavoritePokemonModel()
+    var pokeModelView = PokemonFavoriteModelView()
     @IBOutlet weak var editWeightPokemon: UITextField!
     @IBOutlet weak var editHeighPokemon: UITextField!
     @IBOutlet weak var editNamePokemon: UITextField!
@@ -25,62 +26,47 @@ class UpdatePokemonViewController: UIViewController {
     var pokemonHeigtEdit: String = ""
     var pokemonWeigtEdit: String = ""
     var pokemonPhotoedit: String = ""
-    var poke: FavoritePokemonModel?
     
     private lazy var favoriteProvider: PokemonProvider = { return PokemonProvider()}()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        editNamePokemon.text = pokemonNameEdit
-        editHeighPokemon.text = pokemonHeigtEdit
-        editWeightPokemon.text = pokemonWeigtEdit
+        editNamePokemon.text = pokeUpdate.pokemonName
+        editHeighPokemon.text = pokeUpdate.pokemonHeight
+        editWeightPokemon.text = pokeUpdate.pokemonWeight
+        pokemonPhotoedit = pokeUpdate.pokemonPhoto
         
         favoriteProvider.getAllFavoritePokemon(completion: { pokemon in
-            print("fetchPokeFavList=",pokemon)
         })
-//        guard let pokeData = poke else { return }
-//        DispatchQueue.main.async {
-//            self.configure(editNamePokemon: pokeData.pokemonName!, editHeightPokemon: pokeData.pokemonHeight!, editWeightPokemon: pokeData.pokemonWeight!)
-//        }
-        // Do any additional setup after loading the view.
     }
-    
-//    private func configure(
-//        editNamePokemon: String,
-//        editHeightPokemon: String,
-//        editWeightPokemon: String
-//    ) {
-//        self.editNamePokemon.text = editNamePokemon
-//        self.editHeighPokemon.text = editHeightPokemon
-//        self.editWeightPokemon.text = editWeightPokemon
-//    }
-    
 
     @IBAction func updateSaveBtn(_ sender: UIButton) {
-//        guard let namePokemon =  else { return }
-//        guard let weightPokemon = editWeightPokemon else { return }
-//        guard let heighPokemon = editHeighPokemon else { return }
-//
-//        favoriteProvider.updatePokemon(id, pokemonHeigtEdit, pokemonNameEdit, pokemonWeigtEdit) {
-//            print("testt")
-//        }
-        print("UpdateSave=",pokemonNameEdit,pokemonHeigtEdit,pokemonWeigtEdit)
-        
-        favoriteProvider.updatePokemon(editHeighPokemon.text ?? pokemonHeigtEdit, editNamePokemon.text ?? pokemonNameEdit, editWeightPokemon.text ?? pokemonWeigtEdit, pokemonPhotoedit) { updatedModel in
+        pokeModelView.editPoke(self) { [weak self] newModel in
             
-            var newModel = self.poke
-            newModel!.pokemonName = updatedModel?.value(forKey: "pokemonName") as! String
-            print(newModel)
-            self.delegate?.setDetailModel(newModel: newModel!)
+            self?.delegate?.setDetailModel(newModel: newModel)
+            
+            // Dengan escaping
+            self?.favoriteProvider.getAllFavoritePokemon { pokemon in
+                DispatchQueue.main.async { [weak self] in
+                    guard let pokeUpdate = self?.pokeUpdate else { return }
+                    print("get all favorite di update save button : \(pokeUpdate.pokemonName)")
+                    self?.navigationController?.popViewController(animated: true)
+
+                }
+            }
+            
+            // Tanpa escaping
+//            self?.favoriteProvider.getAllFavoritePokemon(completion: {pokemon in
+//                DispatchQueue.main.async { [weak self] in
+//                    guard let pokeUpdate = self?.pokeUpdate else { return }
+//                    print("get all favorite di update save button : \(pokeUpdate.pokemonName)")
+//                    self?.delegate?.setDetailModel(newModel: pokeUpdate)
+//                    self?.navigationController?.popViewController(animated: true)
+//                }
+//            })
         }
         
-        favoriteProvider.getAllFavoritePokemon(completion: {pokemon in
-            DispatchQueue.main.async { [weak self] in
-                print("pokemonUpdate",pokemon)
-                self?.navigationController?.popViewController(animated: true)
-            }
-        })
 //        favoriteProvider.updatePokemonNew(editNamePokemon.text ?? pokemonNameEdit, editHeighPokemon.text ?? pokemonHeigtEdit, editWeightPokemon.text ?? pokemonWeigtEdit)
     }
 }

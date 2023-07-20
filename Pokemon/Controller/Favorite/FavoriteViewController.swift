@@ -7,27 +7,18 @@
 
 import UIKit
 
+
 class FavoriteViewController: UIViewController {
+    var favoriteViewModel = PokemonFavoriteModelView()
 
     @IBOutlet weak var collectionViewPokemon: UICollectionView!
-    var favorites = [FavoritePokemonModel]()
-//    var activityIndicator: UIActivityIndicatorView!
-    private lazy var favoriteProvider: PokemonProvider = {
-        return PokemonProvider() }()
-    
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        loadFavorites()
-//    }
+   
+
     override func viewDidLoad() {
         super.viewDidLoad()
-//        loadPokemon()
-//        favoriteProvider.getAllFavoritePokemon { pokemon in
-//            DispatchQueue.main.async {
-//                self.favorites = pokemon
-//                self.collectionViewPokemon.reloadData()
-//            }
-//        }
+
+        favoriteViewModel.reloadTableDelegate = self
+        favoriteViewModel.loadPokemon()
         collectionViewPokemon.dataSource = self
         collectionViewPokemon.delegate = self
         collectionViewPokemon.register(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "cell")
@@ -37,37 +28,19 @@ class FavoriteViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadPokemon()
+        favoriteViewModel.loadPokemon()
+        print(favoriteViewModel.pokemonFavCount)
     }
-    private func loadPokemon() {
-        print("loadPokemon")
-        self.favoriteProvider.getAllFavoritePokemon { pokemon in
-            print("pokemon==",pokemon)
-            DispatchQueue.main.async {
-                self.favorites = pokemon
-                print("favoritesCount",self.favorites.count)
-                self.collectionViewPokemon.reloadData()
-            }
-        }
-    }
-
 }
 
 extension FavoriteViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return favorites.count
+        return favoriteViewModel.pokemonFavCount
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
-        let cellList = favorites[indexPath.row]
-        cell.namePokemon.text = cellList.pokemonName
-        
-        let imagePokemonString = cellList.pokemonPhoto;
-        let images = imagePokemonString.imageFromBase64
-        
-        cell.photoPokemon.image = images
-//        loadPokemon()
+        favoriteViewModel.configureCell(cell, at: indexPath)
         return cell
         
     }
@@ -89,10 +62,19 @@ extension FavoriteViewController: UICollectionViewDataSource, UICollectionViewDe
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detailFav = self.storyboard?.instantiateViewController(identifier: "FavoriteDetailViewController") as! FavoriteDetailViewController
-        detailFav.poke = favorites[indexPath.row]
-        detailFav.pokeImage = favorites[indexPath.row].pokemonPhoto
+        guard let model = favoriteViewModel.getFavoritesModel(index: indexPath.row) else { return }
+        detailFav.poke = model
+//        detailFav.pokeImage = model.pokemonPhoto
         self.navigationController?.pushViewController(detailFav, animated: true)
     }
     
     
+}
+
+extension FavoriteViewController: PokemnViewModelDelegate {
+    func pokemonFav() {
+        DispatchQueue.main.async {
+            self.collectionViewPokemon.reloadData()
+        }
+    }
 }
