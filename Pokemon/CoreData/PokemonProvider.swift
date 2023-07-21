@@ -36,7 +36,7 @@ class PokemonProvider {
           return taskContext
       }
      func createPokemon(
-        _ id: Int,
+//        _ id: Int,
         _ pokemonCount1: String,
         _ pokemonCount2: String,
         _ pokemonHeight: String,
@@ -50,7 +50,7 @@ class PokemonProvider {
          let taskContext = newTaskContext()
          
          let pokemonData = PokemonData(context: taskContext)
-         pokemonData.id = Int32(id)
+//         pokemonData.id = Int32(id)
          pokemonData.pokemonCount1 = pokemonCount1
          pokemonData.pokemonCount2 = pokemonCount2
          pokemonData.pokemonHeight = pokemonHeight
@@ -91,31 +91,6 @@ class PokemonProvider {
         return isExist
        
     }
-    
-//    func getPokemon(_ photoPokemon: String,  completion: @escaping(_ pokemons: FavoritePokemonModel) -> Void) {
-//       let taskContext = newTaskContext()
-//        taskContext.perform {
-//            let fetchRequest = NSFetchRequest<NSManagedObject>(entityName:"PokemonData")
-//            do {
-//                let result = try taskContext.fetch(fetchRequest)
-//                let pokemon = FavoritePokemonModel(
-//                    id: result.value(forKeyPath: "id") as? Int32,
-//                    pokemonCount1: result.value(forKeyPath: "pokemonCount1") as? String,
-//                    pokemonCount2: result.value(forKeyPath: "pokemonCount2") as? String,
-//                    pokemonHeight: result.value(forKeyPath: "pokemonHeight") as? String,
-//                    pokemonNamaType1: result.value(forKeyPath: "pokemonNamaType1") as? String,
-//                    pokemonNamaType2: result.value(forKeyPath: "pokemonNamaType1") as? String,
-//                    pokemonName: result.value(forKeyPath: "pokemonName") as? String,
-//                    pokemonPhoto: (result.value(forKeyPath: "pokemonPhoto") as? String)!,
-//                    pokemonWeight: result.value(forKeyPath: "pokemonWeight") as? String
-//
-//                )
-//                completion(pokemon)
-//
-//
-//            }
-//        }
-//    }
     
     func getAllFavoritePokemon(completion: @escaping(_ pokemon: [FavoritePokemonModel]) -> Void) {
       let taskContext = newTaskContext()

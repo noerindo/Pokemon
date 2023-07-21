@@ -24,8 +24,11 @@ class CollectionViewCell: UICollectionViewCell {
     }
     
     func configure(with pokemonModel: Pokemonn) {
-//        let imgUrl = URL(string:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\().png")
-        photoPokemon.image = UIImage(systemName: "heart")
+        let idPhoto = NetworkService.sharedApi.getIdFromUrl(url: pokemonModel.url) { resultId in
+            var idPoke = resultId!
+            let imgUrl = URL(string:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\(idPoke).png")
+            self.photoPokemon.sd_setImage(with: imgUrl)
+        }
         namePokemon.text = pokemonModel.name
     }
 }

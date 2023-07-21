@@ -8,10 +8,11 @@
 import UIKit
 import Alamofire
 
-class ViewController: UIViewController, UISearchBarDelegate {
+class ViewController: UIViewController {
 
     let pokemonModelView = PokemonViewModel()
     var searchActive: Bool = false
+    private lazy var favoriteProvider: PokemonProvider = {  return PokemonProvider() }()
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -19,19 +20,11 @@ class ViewController: UIViewController, UISearchBarDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
+        pokemonModelView.pokemonFilter = pokemonModelView.apiReseult.results
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "cell")
         self.navigationItem.title = "PokemonList"
-        
-//        pokemonModelView.collectionViewPokemon = { [weak self] in
-////            self?.pokemonModelView.loadPokemonData()
-//
-//            self?.collectionView.reloadData()
-//
-//        }
-//       pokemonModelView.loadPokemonData()
-//        self.collectionView.reloadData()
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -49,13 +42,23 @@ class ViewController: UIViewController, UISearchBarDelegate {
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        pokemonModelView.pokemonCount
+        if searchActive == true {
+            return pokemonModelView.pokemonFilterCount
+        } else {
+            return pokemonModelView.pokemonCount
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
-        let result = pokemonModelView.apiReseult.results[indexPath.row]
-        cell.configure(with: result)
+        if searchActive == true {
+            let result = pokemonModelView.pokemonFilter [indexPath.row]
+            cell.configure(with: result)
+        } else {
+            let result = pokemonModelView.apiReseult.results[indexPath.row]
+            cell.configure(with: result)
+        }
+       
         return cell
     }
     
@@ -76,9 +79,39 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detail = self.storyboard?.instantiateViewController(identifier: "DetailViewController") as! DetailViewController
-        detail.pokemonLink = pokemonModelView.apiReseult.results[indexPath.row].url
+        if searchActive == true {
+            detail.pokemonLink = pokemonModelView.pokemonFilter[indexPath.row].url
+            detail.titlePokemon = pokemonModelView.pokemonFilter[indexPath.row].name
+            detail.isInFavorites = favoriteProvider.checkDataExistence(detail.titlePokemon!)
+        } else {
+            detail.pokemonLink = pokemonModelView.apiReseult.results[indexPath.row].url
+            detail.titlePokemon = pokemonModelView.apiReseult.results[indexPath.row].name
+            detail.isInFavorites = favoriteProvider.checkDataExistence(detail.titlePokemon!)
+        }
+      
         self.present(detail, animated: true)
     }
     
 }
 
+extension ViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        pokemonModelView.pokemonFilter = []
+        if searchText == "" {
+            searchActive = false
+            pokemonModelView.pokemonFilter = pokemonModelView.apiReseult.results.self
+            
+        } else {
+            searchActive = true
+            for poke in pokemonModelView.apiReseult.results
+            {
+                if poke.name.lowercased().contains(searchText.lowercased())
+                {
+                    pokemonModelView.pokemonFilter.append(poke)
+//                    print(pokemonFilter)
+                }
+            }
+        }
+        collectionView.reloadData()
+    }
+}

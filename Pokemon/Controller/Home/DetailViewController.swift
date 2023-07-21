@@ -30,7 +30,6 @@ class DetailViewController: UIViewController {
     var isInFavorites: Bool? = false
     var result: PokemonDetail?
     private lazy var pokemonProvider: PokemonProvider = { return PokemonProvider() }()
-//    var pokemonSave: [FavoritePokemonModel] = []
     
     @IBOutlet weak var slotTypeText: UILabel!
     @IBOutlet weak var nameTypeText2: UILabel!
@@ -48,21 +47,12 @@ class DetailViewController: UIViewController {
     var pokemonLink: String?
     var titlePokemon: String?
     var apiDetail: PokemonDetail?
-    var pokemonId: Int = 0
     private var pokemonName: String?
-    
-//    private lazy var managerCoreData: ManagerCoreData = { return ManagerCoreData() }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        guard let pokemonLinkk = pokemonLink else { return }
-        pokemonViewModel.detailViewController = self
-        pokemonViewModel.getDetail(url: pokemonLinkk)
         
-        guard let isDataExist = isInFavorites else { return }
-        if isDataExist {
-            favoriteBtn.setImage(UIImage(systemName: "suit.heart.fill")!.withTintColor(.red, renderingMode: .alwaysOriginal), for: .normal)
-        }
+    
         
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         self.navigationItem.title = titlePokemon
@@ -70,34 +60,14 @@ class DetailViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        guard let pokemonLinkk = pokemonLink else { return }
-//        pokemonViewModel?.getDetail(url: pokemonLinkk)
-//        NetworkService.sharedApi.fetchingAPIDataDetail(url: pokemonLinkk) { [weak self] apiData in
-//            
-//            self?.apiDetail = apiData
-//            
-//            DispatchQueue.main.async {
-//                self?.namePokemon.text = apiData.name
-//                self?.heightPokemon.text = "Height : \(apiData.height)"
-//                self?.weightPokemon.text = "Weight : \(apiData.weight)"
-//                self?.nameTypeText.text = apiData.types[0].type?.name2
-//                self?.slotTypeText.text = "\(apiData.types[0].slot)"
-//                
-//                let typeArry = apiData.types.count
-//                if typeArry >= 2 {
-//                    self?.nameTypeText2.text = apiData.types[1].type?.name2
-//                    self?.slotTypeText2.text = "\(apiData.types[1].slot)"
-//                } else {
-//                    self?.nameTypeText2.text = apiData.types[0].type?.name2
-//                    self?.slotTypeText2.text = "\(apiData.types[0].slot)"
-//                }
-//                self?.photoPokemon.sd_setImage(with: apiData.sprites!.front_default)
-//                print("\(apiData.sprites!.front_default)")
-//                
-//                
-//            
-//            }
-//        }
+        guard let isDataExist = isInFavorites else { return }
+        if isDataExist {
+            favoriteBtn.setImage(UIImage(systemName: "suit.heart.fill")!.withTintColor(.red, renderingMode: .alwaysOriginal), for: .normal)
+        }
+
+        guard let pokemonLinkk = pokemonLink else { return }
+        pokemonViewModel.detailViewController = self
+        pokemonViewModel.getDetail(url: pokemonLinkk)
     }
     
 
@@ -111,24 +81,8 @@ class DetailViewController: UIViewController {
         }
     }
     
-//            guard let photoData = try? Data(contentsOf: URL(string: .sprites?.back_default!)!)  else {
-//                return
-//            }
-    
     private func savePokemon(_ sender: UIButton) {
-        guard let slotType = slotTypeText.text else {
-            return
-        }
-        guard let slotType2 = slotTypeText2.text else { return }
-        guard let heightPoke = heightPokemon.text else { return }
-        guard let nameTypePoke = nameTypeText.text else { return }
-        guard let nameTypePoke2 = nameTypeText2.text else { return }
-        guard let namePoke = namePokemon.text else { return }
-        guard let photoPoke = photoPokemon.image?.base64 else { return }
-        guard let weightPoke = weightPokemon.text else { return }
-        
-        
-        pokemonProvider.createPokemon(pokemonId, "\(slotType)", "\(slotType2)", "\(heightPoke)", "\(nameTypePoke)", "\(nameTypePoke2)", "\(namePoke)", "\(photoPoke)", "\(weightPoke)") {
+        pokemonViewModel.savedetail()
             DispatchQueue.main.async {
                 self.isInFavorites?.toggle()
                 self.setButtonBackGround(
@@ -139,8 +93,6 @@ class DetailViewController: UIViewController {
                 )
                 self.present(Alert.createAlertController(title: "Successful", message: "Save Pokemon"),animated: true)
             }
-            
-        }
     }
     
     private func setButtonBackGround(view: UIButton, on: UIImage, off: UIImage, onOffStatus: Bool ) {
@@ -155,7 +107,7 @@ class DetailViewController: UIViewController {
         guard let pokemonNameGuard = namePokemon.text else {
             return
         }
-        pokemonProvider.deleteFavorite(pokemonNameGuard, completion: {
+        pokemonViewModel.deleteFav(namePokemon: pokemonNameGuard)
             DispatchQueue.main.async {
                 self.isInFavorites?.toggle()
                 self.setButtonBackGround(
@@ -166,8 +118,8 @@ class DetailViewController: UIViewController {
                 )
                 self.present(Alert.createAlertController(title: "Successful", message: "Deleted Pokemon from Core Data"),animated: true)
             }
-        })
+        }
         
     }
-}
+
 

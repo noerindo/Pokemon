@@ -34,13 +34,10 @@ class PokemonFavoriteModelView {
     }
     
      func loadPokemon() {
-//        print("loadPokemon")
         self.favoriteProvider.getAllFavoritePokemon { pokemon in
-//            print("pokemon==",pokemon)
             DispatchQueue.main.async {
                 self.favorites = pokemon
                 self.reloadTableDelegate?.pokemonFav() // Reload table
-//                print("favoritesCount",self.favorites.count)
             }
         }
     }
@@ -69,7 +66,6 @@ class PokemonFavoriteModelView {
     
     func removePoke(_ detailView: FavoriteDetailViewController) {
         let namePoke = detailView.pokeName
-//        print("Yang mau dihapus: \(namePoke)")
         favoriteProvider.deleteFavorite(namePoke) { [weak self] in
             guard let setButtonImageAction = self?.setButtonImageAction else { return }
             setButtonImageAction()
@@ -77,7 +73,6 @@ class PokemonFavoriteModelView {
     }
     
     func editPoke(_ updateView: UpdatePokemonViewController, completion: @escaping ((FavoritePokemonModel) -> Void)) {
-//        let model = updateView.pokeUpdate
         let height = updateView.editHeighPokemon.text
         let weight = updateView.editWeightPokemon.text
         let photo = updateView.pokemonPhotoedit
@@ -88,8 +83,6 @@ class PokemonFavoriteModelView {
             newModel.pokemonName = updateModel?.value(forKey: "pokemonName") as! String
             newModel.pokemonWeight = updateModel?.value(forKey: "pokemonWeight") as! String
             newModel.pokemonHeight = updateModel?.value(forKey: "pokemonHeight") as! String
-            print("Sudah diupdate jadi: \(newModel.pokemonName)")
-            
             completion(newModel)
         }
     }

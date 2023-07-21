@@ -7,7 +7,6 @@
 
 import Foundation
 import UIKit
-import SDWebImage
 
 class PokemonViewModel {
     
@@ -31,12 +30,19 @@ class PokemonViewModel {
         }
     }
     
+    var pokemonFilterCount: Int {
+        get {
+            return pokemonFilter.count
+        }
+    }
+    
     func loadPokemonData(completion: @escaping (() -> Void)) {
         NetworkService.sharedApi.fetchingAPIData { apiData in
             
             DispatchQueue.main.async {
                 self.apiReseult = apiData
                 self.pokemonFilter = self.apiReseult.results
+                
             }
             
             completion()
@@ -94,6 +100,32 @@ class PokemonViewModel {
             }
         }
     )}
+    
+    func savedetail() {
+        guard let unwrappedvc = detailViewController else { return }
+        guard let slotType = unwrappedvc.slotTypeText.text else {
+            return
+        }
+        guard let slotType2 = unwrappedvc.slotTypeText2.text else { return }
+        guard let heightPoke = unwrappedvc.heightPokemon.text else { return }
+        guard let nameTypePoke = unwrappedvc.nameTypeText.text else { return }
+        guard let nameTypePoke2 = unwrappedvc.nameTypeText2.text else { return }
+        guard let namePoke = unwrappedvc.namePokemon.text else { return }
+        guard let photoPoke = unwrappedvc.photoPokemon.image?.base64 else { return }
+        guard let weightPoke = unwrappedvc.weightPokemon.text else { return }
+        
+        favoriteProvider.createPokemon("\(slotType)", "\(slotType2)", "\(heightPoke)", "\(nameTypePoke)", "\(nameTypePoke2)", "\(namePoke)", "\(photoPoke)", "\(weightPoke)", completion: {
+            print("save")
+        })
+    }
+    
+    func deleteFav(namePokemon: String) {
+        guard let unwrappedvc = detailViewController else { return }
+        favoriteProvider.deleteFavorite(namePokemon, completion: {
+            print("delete")
+        })
+        
+    }
     
 
 }

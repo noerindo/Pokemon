@@ -66,7 +66,5 @@ class UpdatePokemonViewController: UIViewController {
 //                }
 //            })
         }
-        
-//        favoriteProvider.updatePokemonNew(editNamePokemon.text ?? pokemonNameEdit, editHeighPokemon.text ?? pokemonHeigtEdit, editWeightPokemon.text ?? pokemonWeigtEdit)
     }
 }
